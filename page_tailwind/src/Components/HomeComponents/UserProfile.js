@@ -3,28 +3,32 @@ import axios from 'axios';
 import Modal from './Modal';
 
 const UserProfile = ({ handleLogout }) => {
-    const [isModalOpen, setModalOpen] = useState(false);
+      const [isModalOpen, setModalOpen] = useState(false);
     const [currentUserNickname, setCurrentUserNickname] = useState('');
 
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/api/user-info', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-                setCurrentUserNickname(response.data.nickname);
-            } catch (error) {
-                console.error('Error fetching user info:', error);
-            }
-        };
+    // fetchUserInfo 함수를 컴포넌트 최상위 레벨로 이동
+    const fetchUserInfo = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/api/user-info', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            setCurrentUserNickname(response.data.nickname);
+        } catch (error) {
+            console.error('Error fetching user info:', error);
+        }
+    };
 
+    useEffect(() => {
         fetchUserInfo();
     }, []);
 
     const openModal = () => setModalOpen(true);
-    const closeModal = () => setModalOpen(false);
+    const closeModal = () => {
+        setModalOpen(false);
+        fetchUserInfo();
+    };
 
     return (
         // 사용자 정보 관련 마크업 및 로직
@@ -32,7 +36,7 @@ const UserProfile = ({ handleLogout }) => {
             <div className="relative w-[100px] h-[100px] bg-[#d8d8d880] rounded-[50px] hidden md:flex" />
             <div className="flex flex-col gap-[12px] flex-1 grow items-center relative">
                 <div className="relative self-stretch min-w-[150px] font-bold text-black text-[24px] tracking-[0] leading-[32px]">
-                    사용자 이름
+                    {currentUserNickname || '사용자 이름'}
                 </div>
                 <div className="flex items-center gap-[6px] relative self-stretch w-full flex-[0_0_auto]">
                     <div className="inline-flex items-center justify-center gap-[2px] px-[4px] py-[2px] relative flex-[0_0_auto] bg-[#d8d8d880] rounded-[2px] overflow-hidden border-[0.5px] border-solid border-[#0000001a]">
@@ -40,9 +44,6 @@ const UserProfile = ({ handleLogout }) => {
                             Gold Member
                         </div>
                     </div>
-                </div>
-                <div className="self-stretch relative text-black text-[16px] tracking-[0] leading-[24px] overflow-hidden text-ellipsis">
-                    사용자 정보
                 </div>
             </div>
 

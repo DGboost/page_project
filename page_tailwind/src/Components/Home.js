@@ -11,14 +11,17 @@ import './Home.css';
 
 const Home = () => {
     const navigate = useNavigate();
-    const [posts, setPosts] = useState([]); // 게시글 목록 상태
+    const [posts, setPosts] = useState([]);
 
     useEffect(() => {
+        // JWT 토큰 확인
         const token = localStorage.getItem('token');
         if (!token) {
+            // 토큰이 없으면 로그인 페이지로 리디렉션
             navigate('/login');
         } else {
-            fetchPosts(); // 게시글 목록 가져오기
+            // 토큰이 있으면 게시글 목록을 가져옵니다
+            fetchPosts();
         }
     }, [navigate]);
 
@@ -29,23 +32,19 @@ const Home = () => {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             });
-            console.log('Fetched posts:', response.data); // 데이터 확인
-            setPosts(response.data); // 게시글 데이터 설정
+            setPosts(response.data);
         } catch (error) {
             console.error('Error fetching posts:', error);
         }
     };
 
-     // 게시글 추가 후 게시글 목록 업데이트
     const handlePostAdded = () => {
         fetchPosts();
     };
 
     const handleLogout = () => {
-        // 로그아웃 처리 로직
-        localStorage.removeItem('token'); // 로컬 스토리지에서 토큰 제거
-
-        // 로그인 페이지로 리디렉션
+        // 로그아웃 처리
+        localStorage.removeItem('token');
         navigate('/login');
     };
 

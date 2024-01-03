@@ -1,29 +1,27 @@
-// Modal.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Modal = ({ isOpen, onClose, currentNickname, setCurrentNickname }) => {
-
     const handleNicknameChange = (e) => {
         setCurrentNickname(e.target.value);
     };
 
     const handleSubmit = async () => {
         try {
-            // 중복 닉네임 검사 추가 (가정)
-            const checkResponse = await axios.get('http://localhost:5000/api/check-nickname', {
-                params: { nickname: currentNickname },
+            const response = await axios.put('http://localhost:5000/api/update-nickname', {
+                newNickname: currentNickname
+            }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             });
 
-            if (checkResponse.data.isDuplicate) {
-                alert('이미 사용 중인 닉네임입니다.');
-                return;
+            if (response.status === 200) {
+                alert('닉네임이 변경되었습니다.');
+                onClose(); // 모달 닫기
+            } else {
+                alert('닉네임 변경 실패: ' + response.data.message);
             }
-
-            // ... 이전의 닉네임 변경 요청 로직
         } catch (error) {
             console.error('Error updating nickname:', error);
             alert('닉네임 변경에 실패했습니다: ' + error.message);
@@ -39,7 +37,7 @@ const Modal = ({ isOpen, onClose, currentNickname, setCurrentNickname }) => {
                     type="text"
                     value={currentNickname}
                     onChange={handleNicknameChange}
-                    className="border border-gray-300 rounded p-2 w-full"
+                // 기타 속성
                 />
                 <div className="flex justify-between mt-4">
                     <button

@@ -177,16 +177,10 @@ app.get('/api/posts', authenticateToken, async (req, res) => {
 });
 
 // 닉네임 업데이트 라우트
-app.put('/update-nickname', authenticateToken, async (req, res) => {
+app.put('/api/update-nickname', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
         const { newNickname } = req.body;
-
-        // 동일한 닉네임이 있는지 확인
-        const existingUser = await User.findOne({ nickname: newNickname });
-        if (existingUser) {
-            return res.status(400).send('이미 사용 중인 닉네임입니다.');
-        }
 
         // 닉네임 업데이트
         await User.findByIdAndUpdate(userId, { nickname: newNickname });
