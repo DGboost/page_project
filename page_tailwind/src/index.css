@@ -15,3 +15,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* src/styles.css 또는 프로젝트의 메인 스타일시트 파일 */
+.modal-backdrop {
+  z-index: 10; /* 뒤 페이지보다 높은 z-index */
+}
+
+.modal {
+  z-index: 20; /* 모달 배경보다 높은 z-index */
+}
+
+.no-pointer-events {
+  pointer-events: none; /* 모달이 열려 있을 때 포인터 이벤트 비활성화 */
+}
