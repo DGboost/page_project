@@ -85,7 +85,7 @@ app.post('/login', async (req, res) => {
 
     if (user && bcrypt.compareSync(password, user.password)) {
       // JWT 토큰 생성 (user._id 사용)
-      const token = jwt.sign({ userId: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '5m' });
+      const token = jwt.sign({ userId: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '30m' });
 
       // 사용자에게 JWT 토큰과 성공 메시지 전달
       res.json({ success: true, token });
@@ -205,5 +205,32 @@ app.get('/api/user-info', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Error fetching user info:', error);
     res.status(500).send('Error fetching user info');
+  }
+});
+
+// 게시글 삭제 라우트
+app.delete('/api/posts/:postId', authenticateToken, async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const userId = req.user.userId;
+
+    // 게시글 찾기
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).send('게시글을 찾을 수 없습니다.');
+    }
+
+    // 게시글 소유자 확인 (옵션)
+    if (post.userId.toString() !== userId) {
+      return res.status(403).send('삭제 권한이 없습니다.');
+    }
+
+    // 게시글 삭제
+    await Post.findByIdAndDelete(postId);
+    res.send('게시글이 성공적으로 삭제되었습니다.');
+  } catch (error) {
+    console.error('게시글 삭제 오류:', error);
+    res.status(500).send('게시글 삭제 중 오류 발생');
   }
 });

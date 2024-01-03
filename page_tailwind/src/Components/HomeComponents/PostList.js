@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PostItem from './PostItem';
 import PostModal from './PostModal';
+import axios from 'axios';
 
-const PostList = ({ posts }) => {
+const PostList = ({ posts, onRefreshPosts }) => {
     const [selectedPost, setSelectedPost] = useState(null);
 
     useEffect(() => {
@@ -17,8 +18,39 @@ const PostList = ({ posts }) => {
         setSelectedPost(null);
     };
 
+    const handleDeletePost = async (postId) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            // 모달 닫기
+            setSelectedPost(null);
+            // 게시글 목록 최신화
+            // 예: 부모 컴포넌트의 게시글 목록 갱신 함수 호출 또는 상태 업데이트
+            onRefreshPosts();
+        } catch (error) {
+            console.error('게시글 삭제 오류', error);
+            // 오류 처리
+        }
+    };
+
+    const handleEditPost = (postId) => {
+        // 게시글 수정 관련 로직
+        // 예: 수정 폼을 표시하거나 수정 페이지로 네비게이션
+        console.log("게시글 수정:", postId);
+        // 여기에 수정을 위한 추가적인 로직을 구현합니다.
+    };
+
     if (!posts || posts.length === 0) {
-        return <div>Loading posts...</div>;
+        return (<div className="flex justify-center items-center "> {/* Flexbox를 사용한 중앙 정렬 */}
+            <div className="text-center font-bold text-[20px]"> {/* 텍스트 정렬 및 스타일링 */}
+                Loading posts...
+            </div>
+        </div>
+        );
     }
 
     return (
@@ -42,6 +74,8 @@ const PostList = ({ posts }) => {
                 <PostModal
                     post={selectedPost}
                     onClose={handleCloseModal}
+                    onDelete={() => handleDeletePost(selectedPost._id)}
+                    onEdit={() => handleEditPost(selectedPost._id)}
                 />
             )}
         </div>

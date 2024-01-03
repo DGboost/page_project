@@ -38,6 +38,10 @@ const Home = () => {
         }
     };
 
+    const refreshPosts = () => {
+        fetchPosts();
+    };
+
     const handlePostAdded = () => {
         fetchPosts();
         setShowPostForm(false); // 게시글 추가 후 폼 숨기기
@@ -65,7 +69,7 @@ const Home = () => {
                         userId={userId}
                     />
                 ) : (
-                    <PostList posts={posts} />
+                    <PostList posts={posts} onRefreshPosts={refreshPosts} />
                 )}
             </div>
             <UserProfile handleLogout={handleLogout} />
