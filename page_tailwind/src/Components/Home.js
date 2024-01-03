@@ -72,7 +72,7 @@ const Home = () => {
                     <PostList posts={posts} onRefreshPosts={refreshPosts} />
                 )}
             </div>
-            <UserProfile handleLogout={handleLogout} />
+            <UserProfile handleLogout={handleLogout} onRefreshPosts={refreshPosts} />
             <PopularPosts />
             <Footer />
         </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PostItem = ({ title, author, nick, date }) => {
+const PostItem = ({ title, nick, date }) => {
   return (
     <div className="flex flex-col items-center justify-center gap-[20px] px-0 py-[12px] relative flex-1 grow">
       <div className="relative w-[100px] h-[100px] bg-[#0000000d] rounded-[50px]">

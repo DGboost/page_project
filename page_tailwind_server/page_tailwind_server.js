@@ -234,3 +234,31 @@ app.delete('/api/posts/:postId', authenticateToken, async (req, res) => {
     res.status(500).send('게시글 삭제 중 오류 발생');
   }
 });
+
+// 게시글 수정 라우트
+app.put('/api/posts/:postId', authenticateToken, async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const { text } = req.body; // 수정된 텍스트 받기
+
+    const userId = req.user.userId;
+    const post = await Post.findById(postId);
+
+    // 게시글이 존재하는지 및 사용자가 게시글의 소유자인지 확인
+    if (!post) {
+      return res.status(404).send('게시글을 찾을 수 없습니다.');
+    }
+    if (post.userId.toString() !== userId) {
+      return res.status(403).send('게시글을 수정할 권한이 없습니다.');
+    }
+
+    // 게시글 업데이트
+    post.text = text;
+    await post.save();
+
+    res.send('게시글이 성공적으로 수정되었습니다.');
+  } catch (error) {
+    console.error('게시글 수정 오류:', error);
+    res.status(500).send('게시글 수정 중 오류 발생');
+  }
+});

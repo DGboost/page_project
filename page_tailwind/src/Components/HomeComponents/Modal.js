@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Modal = ({ isOpen, onClose, currentNickname, setCurrentNickname }) => {
+const Modal = ({ isOpen, onClose, currentNickname, setCurrentNickname, onRefreshPosts }) => {
     const handleNicknameChange = (e) => {
         setCurrentNickname(e.target.value);
     };
@@ -19,6 +19,7 @@ const Modal = ({ isOpen, onClose, currentNickname, setCurrentNickname }) => {
             if (response.status === 200) {
                 alert('닉네임이 변경되었습니다.');
                 onClose(); // 모달 닫기
+                onRefreshPosts(); // 게시글 목록 갱신
             } else {
                 alert('닉네임 변경 실패: ' + response.data.message);
             }

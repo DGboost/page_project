@@ -37,12 +37,25 @@ const PostList = ({ posts, onRefreshPosts }) => {
         }
     };
 
-    const handleEditPost = (postId) => {
-        // 게시글 수정 관련 로직
-        // 예: 수정 폼을 표시하거나 수정 페이지로 네비게이션
-        console.log("게시글 수정:", postId);
-        // 여기에 수정을 위한 추가적인 로직을 구현합니다.
+    const handleEditPost = async (postId, editedText) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.put(`http://localhost:5000/api/posts/${postId}`,
+                { text: editedText }, // 여기에서 수정된 텍스트를 전송합니다.
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            onRefreshPosts(); // 게시글 목록 갱신
+            handleCloseModal(); // 모달 닫기
+        } catch (error) {
+            console.error('게시글 수정 오류', error);
+            // 오류 처리
+        }
     };
+
 
     if (!posts || posts.length === 0) {
         return (<div className="flex justify-center items-center "> {/* Flexbox를 사용한 중앙 정렬 */}
@@ -75,7 +88,7 @@ const PostList = ({ posts, onRefreshPosts }) => {
                     post={selectedPost}
                     onClose={handleCloseModal}
                     onDelete={() => handleDeletePost(selectedPost._id)}
-                    onEdit={() => handleEditPost(selectedPost._id)}
+                    onEdit={(editedText) => handleEditPost(selectedPost._id, editedText)}
                 />
             )}
         </div>

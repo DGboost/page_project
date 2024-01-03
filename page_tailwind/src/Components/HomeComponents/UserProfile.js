@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from './Modal';
 
-const UserProfile = ({ handleLogout }) => {
+const UserProfile = ({ handleLogout, onRefreshPosts }) => {
       const [isModalOpen, setModalOpen] = useState(false);
     const [currentUserNickname, setCurrentUserNickname] = useState('');
 
@@ -67,6 +67,7 @@ const UserProfile = ({ handleLogout }) => {
                     onClose={closeModal}
                     currentNickname={currentUserNickname}
                     setCurrentNickname={setCurrentUserNickname}
+                    onRefreshPosts={onRefreshPosts}
                 />
             </div>
 
