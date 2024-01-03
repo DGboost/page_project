@@ -85,7 +85,7 @@ app.post('/login', async (req, res) => {
 
     if (user && bcrypt.compareSync(password, user.password)) {
       // JWT 토큰 생성 (user._id 사용)
-      const token = jwt.sign({ userId: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '5m' });
 
       // 사용자에게 JWT 토큰과 성공 메시지 전달
       res.json({ success: true, token });
@@ -160,14 +160,14 @@ app.get('/api/posts', authenticateToken, async (req, res) => {
     const posts = await Post.find({})
       .sort({ createdAt: -1 })
       .limit(3)
-      .populate('userId', 'nickname');
+      .populate('userId', 'nickname'); // 사용자 모델의 'nickname' 필드를 포함시킵니다.
 
     res.json(posts.map(post => ({
       _id: post._id,
       text: post.text,
       imageUrl: post.imageUrl,
       userId: post.userId._id,
-      nickname: post.nickname, // 닉네임 필드 직접 포함
+      nickname: post.userId.nickname, // 사용자의 닉네임을 'nickname' 필드로 포함시킵니다.
       createdAt: post.createdAt
     })));
   } catch (error) {

@@ -14,7 +14,7 @@ const PostItem = ({ title, author, nick, date }) => {
           {title}
         </div>
         <div className="font-normal text-[#00000080] text-[16px] text-center leading-[24px]">
-          {author}
+          {nick}
         </div>
       </div>
       <div className="font-medium text-black text-[28px] text-center leading-[36px]">
