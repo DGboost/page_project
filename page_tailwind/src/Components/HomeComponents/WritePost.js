@@ -1,8 +1,6 @@
-// writepost.js
 import React from 'react';
-import PostForm from './PostForm';
 
-const WritePost = ({ onTogglePostForm }) => {
+const WritePost = ({ onTogglePostForm, isWriting }) => {
     const userId = localStorage.getItem('userId');
 
     return (
@@ -16,7 +14,7 @@ const WritePost = ({ onTogglePostForm }) => {
                     onClick={onTogglePostForm} // 게시글 작성 폼 표시 함수 호출
                 >
                     <div className="relative w-fit font-medium text-white text-[16px] leading-[24px] whitespace-nowrap">
-                        글쓰기
+                        {isWriting ? '글쓰는 중' : '글쓰기'}
                     </div>
                 </button>
             </div>
