@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './HomeComponents/Header';
 import WritePost from './HomeComponents/WritePost';
 import PostList from './HomeComponents/PostList';
+import PostListCompact from './HomeComponents/PostListCompact';
 import UserProfile from './HomeComponents/UserProfile';
 import PostForm from './HomeComponents/PostForm';
-import PopularPosts from './HomeComponents/PopularPosts';
 import Footer from './HomeComponents/Footer';
 import axios from 'axios';
 import './Home.css';
 
 const Home = () => {
     const navigate = useNavigate();
-    const userId = localStorage.getItem('userId'); // userId를 가져옵니다.
+    const [currentPage, setCurrentPage] = useState(1);
     const [posts, setPosts] = useState([]);
     const [showPostForm, setShowPostForm] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -23,28 +24,29 @@ const Home = () => {
         } else {
             fetchPosts();
         }
+
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, [navigate]);
 
-    const fetchPosts = async () => {
-        try {
-            const response = await axios.get('http://localhost:5000/api/posts', {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            setPosts(response.data);
-        } catch (error) {
-            console.error('Error fetching posts:', error);
-        }
-    };
-
-    const refreshPosts = () => {
-        fetchPosts();
-    };
+    // 게시글 목록을 불러오는 함수
+const fetchPosts = async (page, limit = 8) => {
+    try {
+        const response = await axios.get(`http://localhost:5000/api/posts?page=${page}&limit=${limit}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        setPosts(response.data);
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+    }
+};
 
     const handlePostAdded = () => {
         fetchPosts();
-        setShowPostForm(false); // 게시글 추가 후 폼 숨기기
+        setShowPostForm(false);
     };
 
     const handleLogout = () => {
@@ -52,28 +54,24 @@ const Home = () => {
         navigate('/login');
     };
 
-    // 게시글 작성 폼 표시 상태를 전환하는 함수
     const togglePostForm = () => {
         setShowPostForm(!showPostForm);
     };
-    // Home 컴포넌트 내부
+
     return (
         <div className="flex flex-col items-center pt-[80px] pb-0 px-0 relative bg-white">
             <Header />
-            <WritePost onTogglePostForm={togglePostForm} />
+            <WritePost onTogglePostForm={togglePostForm} isWriting={showPostForm} />
             <div className="w-full">
                 {showPostForm ? (
-                    <PostForm
-                        onPostAdded={handlePostAdded}
-                        onClose={() => setShowPostForm(false)}
-                        userId={userId}
-                    />
+                    <PostForm onPostAdded={handlePostAdded} onRefreshPosts={fetchPosts} onClose={() => setShowPostForm(false)} />
+                ) : windowWidth > 770 ? (
+                    <PostList posts={posts} onRefreshPosts={fetchPosts} setCurrentPage={setCurrentPage} />
                 ) : (
-                    <PostList posts={posts} onRefreshPosts={refreshPosts} />
+                    <PostListCompact posts={posts} onRefreshPosts={fetchPosts} />
                 )}
             </div>
-            <UserProfile handleLogout={handleLogout} onRefreshPosts={refreshPosts} />
-            <PopularPosts />
+            <UserProfile handleLogout={handleLogout} onRefreshPosts={fetchPosts} />
             <Footer />
         </div>
     );

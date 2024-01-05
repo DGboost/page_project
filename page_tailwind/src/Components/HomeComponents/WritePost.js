@@ -10,10 +10,10 @@ const WritePost = ({ onTogglePostForm, isWriting }) => {
                     게시판
                 </div>
                 <button
-                    className="flex flex-col w-[160px] items-center justify-center p-[12px] relative bg-stone-600 hover:bg-stone-800 rounded-[8px]"
-                    onClick={onTogglePostForm} // 게시글 작성 폼 표시 함수 호출
+                    className="flex flex-col w-[160px] items-center justify-center p-[12px] relative bg-blue-500 hover:bg-blue-700 rounded w-60"
+                    onClick={onTogglePostForm}
                 >
-                    <div className="relative w-fit font-medium text-white text-[16px] leading-[24px] whitespace-nowrap">
+                    <div className="relative w-fit text-white font-bold text-[16px] leading-[24px] whitespace-nowrap">
                         {isWriting ? '글쓰는 중' : '글쓰기'}
                     </div>
                 </button>

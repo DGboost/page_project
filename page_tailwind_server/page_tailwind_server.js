@@ -5,10 +5,26 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const path = require('path');
 const jwt = require('jsonwebtoken');
 
 const app = express();
+
+// multer 설정
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        // 확장자 추출 및 파일 이름 설정
+        const ext = path.extname(file.originalname);
+        cb(null, file.fieldname + '-' + Date.now() + ext);
+    }
+});
+
+const upload = multer({ storage: storage });
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -131,9 +147,9 @@ app.get('/verify-token', authenticateToken, (req, res) => {
 app.post('/api/posts', upload.single('image'), authenticateToken, async (req, res) => {
   try {
     const { text } = req.body;
-    const imageUrl = req.file ? req.file.path : '';
+    const imageUrl = req.file ? req.file.path : ''; // 업로드된 이미지의 경로
 
-    const userId = req.user.userId;
+    const userId = req.user.userId; // 인증된 사용자의 ID
     const user = await User.findById(userId);
 
     if (!user) {
@@ -142,10 +158,11 @@ app.post('/api/posts', upload.single('image'), authenticateToken, async (req, re
 
     const newPost = new Post({ 
       text, 
-      imageUrl, 
+      imageUrl,
       userId: user._id, 
       nickname: user.nickname // 유저의 닉네임 포함
     });
+
     await newPost.save();
     res.status(201).send('Post created successfully');
   } catch (error) {
@@ -154,20 +171,25 @@ app.post('/api/posts', upload.single('image'), authenticateToken, async (req, re
   }
 });
 
-// 게시글 목록 가져오기 라우트
+// 게시글 가져오기
 app.get('/api/posts', authenticateToken, async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 8;
+    const skip = (page - 1) * limit;
+
     const posts = await Post.find({})
       .sort({ createdAt: -1 })
-      .limit(3)
-      .populate('userId', 'nickname'); // 사용자 모델의 'nickname' 필드를 포함시킵니다.
+      .skip(skip)
+      .limit(limit)
+      .populate('userId', 'nickname');
 
     res.json(posts.map(post => ({
       _id: post._id,
       text: post.text,
       imageUrl: post.imageUrl,
       userId: post.userId._id,
-      nickname: post.userId.nickname, // 사용자의 닉네임을 'nickname' 필드로 포함시킵니다.
+      nickname: post.userId.nickname,
       createdAt: post.createdAt
     })));
   } catch (error) {

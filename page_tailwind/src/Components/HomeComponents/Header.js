@@ -11,12 +11,6 @@ const Header = () => {
                 게시판
             </div>
             <div className="inline-flex items-center justify-center gap-[40px] relative flex-[0_0_auto] bg-white">
-                <div className="relative w-fit [font-family:'Roboto-Regular',Helvetica] font-normal text-black text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-                    홈
-                </div>
-                <div className="relative w-fit [font-family:'Roboto-Regular',Helvetica] font-normal text-black text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-                    내 게시글
-                </div>
                 <input
                     type="text"
                     placeholder="Search in site"

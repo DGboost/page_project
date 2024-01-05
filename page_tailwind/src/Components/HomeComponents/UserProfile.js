@@ -49,16 +49,16 @@ const UserProfile = ({ handleLogout, onRefreshPosts }) => {
 
             <div className="flex-col inline-flex items-start gap-[12px] relative flex-[0_0_auto]">
                 <button
-                    className="flex-[0_0_auto] flex flex-col w-[160px] items-center justify-center p-[12px] relative rounded-[8px] border border-solid border-black"
+                    className="flex-[0_0_auto] flex flex-col w-[160px] bg-red-500 hover:bg-red-700 items-center justify-center p-[12px] relative rounded w-60 border border-solid "
                     onClick={handleLogout} // 로그아웃 처리 함수 사용
                     style={{ cursor: 'pointer' }}
                 >
-                    <div className="relative w-fit mt-[-1.00px] [font-family:'Roboto-Medium',Helvetica] font-medium text-black text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
+                    <div className="relative w-fit mt-[-1.00px] font-bold text-white text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
                         로그아웃
                     </div>
                 </button>
-                <button onClick={openModal} className="flex-[0_0_auto] flex flex-col w-[160px] items-center justify-center p-[12px] relative bg-black rounded-[8px]">
-                    <div className="relative w-fit mt-[-1.00px] font-medium text-white text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
+                <button onClick={openModal} className="flex-[0_0_auto] flex flex-col w-[160px] items-center justify-center p-[12px] relative bg-gray-500 hover:bg-gray-700 rounded w-60">
+                    <div className="relative w-fit mt-[-1.00px] font-bold text-white text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
                         프로필 수정
                     </div>
                 </button>
