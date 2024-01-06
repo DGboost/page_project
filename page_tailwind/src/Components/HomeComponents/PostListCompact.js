@@ -21,7 +21,7 @@ const PostListCompact = ({ posts, onRefreshPosts }) => {
     const handleDeletePost = async (postId) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+            await axios.delete(`http://54.180.100.241:5000/api/posts/${postId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -40,7 +40,7 @@ const PostListCompact = ({ posts, onRefreshPosts }) => {
     const handleEditPost = async (postId, editedText) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/posts/${postId}`,
+            await axios.put(`http://54.180.100.241:5000/api/posts/${postId}`,
                 { text: editedText }, // 여기에서 수정된 텍스트를 전송합니다.
                 {
                     headers: {
