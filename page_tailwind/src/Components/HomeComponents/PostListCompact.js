@@ -5,6 +5,8 @@ import axios from 'axios';
 
 const PostListCompact = ({ posts, onRefreshPosts }) => {
     const [selectedPost, setSelectedPost] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const postsPerPage = 8;
 
     useEffect(() => {
         console.log('Posts:', posts);
@@ -21,7 +23,7 @@ const PostListCompact = ({ posts, onRefreshPosts }) => {
     const handleDeletePost = async (postId) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://54.180.100.241:5000/api/posts/${postId}`, {
+            await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -40,7 +42,7 @@ const PostListCompact = ({ posts, onRefreshPosts }) => {
     const handleEditPost = async (postId, editedText) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://54.180.100.241:5000/api/posts/${postId}`,
+            await axios.put(`http://localhost:5000/api/posts/${postId}`,
                 { text: editedText }, // 여기에서 수정된 텍스트를 전송합니다.
                 {
                     headers: {
@@ -56,6 +58,11 @@ const PostListCompact = ({ posts, onRefreshPosts }) => {
         }
     };
 
+     // 페이지 변경 핸들러
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+        onRefreshPosts(newPage, postsPerPage);
+    };
 
     if (!posts || posts.length === 0) {
         return (<div className="flex justify-center items-center "> {/* Flexbox를 사용한 중앙 정렬 */}
@@ -65,7 +72,6 @@ const PostListCompact = ({ posts, onRefreshPosts }) => {
         </div>
         );
     }
-
 
     return (
         <div className="px-4 md:px-[170px] py-[60px] overflow-hidden flex flex-col items-center justify-center relative w-full">
@@ -80,16 +86,23 @@ const PostListCompact = ({ posts, onRefreshPosts }) => {
                             nick={post.nickname}
                             date={new Date(post.createdAt).toLocaleDateString()}
                         />
-                        {index === 2 && (
-                            <div onClick={() => {/* 여기에 전체 글보기 클릭 로직 추가 */ }} className="cursor-pointer">
-                                <ListItem
-                                    title="전체 글보기"
-                                    isAllPostsItem={true}
-                                />
-                            </div>
-                        )}
                     </div>
                 ))}
+                {/* 페이지네이션 컨트롤 */}
+                <div className="pagination flex justify-center mt-4">
+                    {currentPage > 1 && (
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            className="mx-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
+                            이전
+                        </button>
+                    )}
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        className="mx-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
+                        다음
+                    </button>
+                </div>
             </div>
             {selectedPost && (
                 <PostModal

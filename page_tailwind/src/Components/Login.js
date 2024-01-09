@@ -18,7 +18,7 @@ const Login = (props) => {
     setIsLoading(true); // 로딩 시작
 
     try {
-      const response = await axios.post('http://54.180.100.241:5000/login', {
+      const response = await axios.post('http://localhost:5000/login', {
         userId,
         password
       });

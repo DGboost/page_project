@@ -8,7 +8,7 @@ const Modal = ({ isOpen, onClose, currentNickname, setCurrentNickname, onRefresh
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.put('http://54.180.100.241:5000/api/update-nickname', {
+            const response = await axios.put('http://localhost:5000/api/update-nickname', {
                 newNickname: currentNickname
             }, {
                 headers: {

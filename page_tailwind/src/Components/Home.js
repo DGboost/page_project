@@ -33,7 +33,7 @@ const Home = () => {
     // 게시글 목록을 불러오는 함수
 const fetchPosts = async (page, limit = 8) => {
     try {
-        const response = await axios.get(`http://54.180.100.241:5000/api/posts?page=${page}&limit=${limit}`, {
+        const response = await axios.get(`http://localhost:5000/api/posts?page=${page}&limit=${limit}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }

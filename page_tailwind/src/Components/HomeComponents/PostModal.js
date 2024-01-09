@@ -22,7 +22,7 @@ const PostModal = ({ post, onClose, onEdit, onDelete }) => {
         {/* 이미지 표시 */}
         {post.imageUrl && (
           
-          <img src={`http://54.180.100.241:5000/${post.imageUrl}`} alt="Post" className="mb-4 max-w-full h-auto" />
+          <img src={`http://localhost:5000/${post.imageUrl}`} alt="Post" className="mb-4 max-w-full h-auto" />
         )}
 
         {editMode ? (

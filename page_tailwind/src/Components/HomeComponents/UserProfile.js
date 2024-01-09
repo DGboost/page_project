@@ -9,7 +9,7 @@ const UserProfile = ({ handleLogout, onRefreshPosts }) => {
     // fetchUserInfo 함수를 컴포넌트 최상위 레벨로 이동
     const fetchUserInfo = async () => {
         try {
-            const response = await axios.get('http://54.180.100.241:5000/api/user-info', {
+            const response = await axios.get('http://localhost:5000/api/user-info', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
