@@ -1,7 +1,7 @@
 import React from 'react';
 
 const PostItem = ({ title, nick, date, imageUrl }) => {
-  const fullImageUrl = `http://localhost:5000/${imageUrl}`;
+  const fullImageUrl = `http://52.79.240.233:5000/${imageUrl}`;
 
     return (
     <div className="flex flex-col items-center justify-center gap-[20px] px-0 py-[12px] relative flex-1 grow">

@@ -20,7 +20,7 @@ const PostList = ({ posts, onRefreshPosts }) => {
         try {
             console.log('Deleting post...');
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+            await axios.delete(`http://52.79.240.233:5000/api/posts/${postId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -37,7 +37,7 @@ const PostList = ({ posts, onRefreshPosts }) => {
     const handleEditPost = async (postId, editedText) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/posts/${postId}`, { text: editedText }, {
+            await axios.put(`http://52.79.240.233:5000/api/posts/${postId}`, { text: editedText }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

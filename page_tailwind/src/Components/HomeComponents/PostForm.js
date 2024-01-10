@@ -22,7 +22,7 @@ const PostForm = ({ onPostAdded, onClose, userId }) => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post('http://localhost:5000/api/posts', formData, {
+            const response = await axios.post('http://52.79.240.233:5000/api/posts', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${token}`

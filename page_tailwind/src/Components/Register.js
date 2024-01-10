@@ -18,7 +18,7 @@ const Register = () => {
   // 아이디 중복 확인 함수
   const checkUserId = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/check-userId/${userId}`);
+      const response = await axios.get(`http://52.79.240.233:5000/check-userId/${userId}`);
       setIsUserIdDuplicate(response.data.isDuplicate);
     } catch (error) {
       console.error('Error checking userId', error);
@@ -47,7 +47,7 @@ const Register = () => {
     setIsLoading(true); // 로딩 시작
 
     try {
-      const response = await axios.post('http://localhost:5000/register', {
+      const response = await axios.post('http://52.79.240.233:5000/register', {
         userId,
         password
       });
